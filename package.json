@@ -1,0 +1,23 @@
+{
+  "name": "prifacie",
+  "version": "1.0.0",
+  "description": "privacy protections",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamalasaurus/prifacie.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kamalasaurus/prifacie/issues"
+  },
+  "homepage": "https://github.com/kamalasaurus/prifacie#readme",
+  "dependencies": {
+    "simple-headless-chrome": "^4.3.10"
+  }
+}
