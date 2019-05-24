@@ -33,9 +33,23 @@ async function navigateWebsite() {
     //await mainTab.debugLog('Waiting 5 seconds to give some time to all the redirects')
 
     // Navigate a little...
-    await mainTab.goTo('https://mobile.facebook.com/privacy')
+    await mainTab.goTo('https://mobile.facebook.com/settings')
 
     await mainTab.wait(2000)
+
+    await mainTab.click('a[href#=dyi]')
+
+    await mainTab.wait(2000)
+
+    await mainTab.select('[value="VERY_HIGH"]').setAttribute('selected', true)
+
+    //await mainTab.click('button[data-testid*="dyi/sections/create"]')
+
+    await mainTab(2000)
+
+    //await mainTab.click('div[data-testid="dyi/archives/row/0"] button[label="DOWNLOAD"]')
+
+
 
     // Check the select current value
     //const myCurrentSubscriptionPlan = await mainTab.getValue('.fbSettingsListItemEditText')
