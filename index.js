@@ -2,9 +2,34 @@ const HeadlessChrome = require('simple-headless-chrome')
 const secrets = require('./secrets.json')
 
 const browser = new HeadlessChrome({
-  headless: true // If you turn this off, you can actually see the browser navigate with your instructions
+  headless: false // If you turn this off, you can actually see the browser navigate with your instructions
   // see above if using remote interface
 })
+
+async function checkForData(ctx) {
+  return await ctx.evaluate(function(selector) {
+    return document.querySelector(selector) !== null
+  }, 'div[data-testid="dyi/archives/row/0"] button[label="DOWNLOAD"]')
+}
+
+async function refresh(ctx) {
+  let location = await ctx.evaluate(function() {
+    return window.location.href
+  })
+
+  await ctx.goTo(location.result.value)
+  await ctx.wait(30000)
+  return getData(ctx)
+}
+
+async function getData(ctx) {
+  let dataExists = await checkForData(ctx)
+
+  return dataExists.result.value ?
+    await ctx.click('div[data-testid="dyi/archives/row/0"] button[label="DOWNLOAD"]') :
+    await refresh(ctx)
+}
+
 async function navigateWebsite() {
   try {
     await browser.init()
@@ -37,18 +62,25 @@ async function navigateWebsite() {
 
     await mainTab.wait(2000)
 
-    await mainTab.click('a[href#=dyi]')
+    await mainTab.click('a[href*=dyi]')
 
     await mainTab.wait(2000)
 
-    await mainTab.select('[value="VERY_HIGH"]').setAttribute('selected', true)
+    await mainTab.evaluate(function(selector) {
+      const form_option = document.querySelector(selector)
+      form_option.setAttribute('selected', true)
+      return
+    }, '[value="VERY_HIGH"]')
 
-    //await mainTab.click('button[data-testid*="dyi/sections/create"]')
+    await mainTab.wait(2000)
 
-    await mainTab(2000)
+    await mainTab.click('button[data-testid*="dyi/sections/create"]')
 
-    //await mainTab.click('div[data-testid="dyi/archives/row/0"] button[label="DOWNLOAD"]')
+    await mainTab.wait(4000)
 
+    await getData(mainTab)
+
+    await mainTab.wait(2000)
 
 
     // Check the select current value
